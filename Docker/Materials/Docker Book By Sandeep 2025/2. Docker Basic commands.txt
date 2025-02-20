@@ -1,0 +1,123 @@
+**************************************************************
+Docker Basic commands
+********************************************
+
+
+To see all images present in your local repo
+================================================
+
+# docker images
+
+
+To find out images in docker hub
+=====================================
+ 
+# docker search  image_name
+# docker search  ubuntu
+
+
+
+To download image from docker hub to local machine
+=====================================================
+ 
+# docker   pull  image_name
+# docker   pull  ubuntu
+
+
+
+To see the containers
+========================
+
+# docker ps                 (running containers)
+# docker  ps –a             (stopped and exit containers)
+ps (process status) 
+
+       OR 
+                   
+# docker container ls       (show only running containers)
+# docker container ls -a    (show only stopped and exit containers)
+
+
+
+To Start docker container 
+=================================
+
+
+# docker  start  container_name
+# docker container start  container_name
+
+
+
+To go inside container
+============================
+
+# docker   attach  container_name
+# docker container  attach  container_name
+
+
+To go out of the running container without closing it
+==============================================================
+
+cntrl + p
+cntrl + q
+
+
+To Renaming  docker container 
+=================================
+
+# docker container rename  container_name   new_containername
+
+
+
+To Stop docker container 
+================================
+
+
+# docker  stop  container_name
+# docker container  stop  container_name
+
+
+
+To Delete  docker container 
+================================
+
+
+# docker  rm  container_name
+# docker container rm  container_name
+
+
+To delete a container forcefully
+
+# docker container rm -f container_name
+
+
+To copy a file 
+===========================
+
+# docker container cp filename  container_name:/tmp/
+
+
+
+Some important commands:
+--------------------------
+
+Stop all running containers: 
+
+# docker stop $(docker ps -a -q)               it will run in a loop and stop the running containers one by one
+
+
+Delete all stopped containers:
+ 
+# docker rm $(docker ps -a -q)
+
+
+Delete all images: 
+
+docker rmi -f $(docker images -q)
+
+
+
+
+
+
+

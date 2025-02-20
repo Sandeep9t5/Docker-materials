@@ -1,0 +1,166 @@
+Docker File to access container (By SSH) 
+============================================================== 
+# docker image history image id
+
+Lecture :12
+====================
+
+
+FROM  ubuntu:14.04
+LABEL Name="Sanjay Dahiya"
+LABEL EmailID="Sanjay.dahiya332@gmail.com"
+LABEL Mobile="8817442344"
+ENV Name=cloudknowledges
+ENV Pass=docker@2020
+RUN useradd $Name  &&  echo "$Name:$Pass" | chpasswd
+RUN touch India
+RUN touch abc
+RUN touch abc1
+RUN apt-get update && apt-get install -y tree  /
+    python \
+    openssh-server  \
+    openssh-client
+RUN mkdir -p /var/run/sshd
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+
+# docker image build -t cloudknowledge:51 .
+# docker container run -td -p 2222:22 cloudknoledge:51
+
+
+
+*************************************************************************************************************************88
+
+
+lecture: 13
+===============
+
+
+FROM centos:latest
+MAINTAINER sanjay.dahiya332@gmail.com
+RUN yum install -y httpd \
+   zip  \
+  unzip
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page251/folio.zip  /var/www/html/ 
+WORKDIR /var/www/html
+RUN unzip folio.zip
+RUN cp -rvf Folio/*  .
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+EXPOSE 80
+
+
+# docker image build -t cloudknowledge:70 .
+# docker container run -i td -p 8000:80 cloudknowledge:70
+
+
+
+**************************************************************************************************************************
+
+lecture: 14
+===============
+
+[root@ip-172-31-93-47 ~]# vim Dockerfile
+
+FROM  ubuntu:14.04
+touch abc
+
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  .
+
+
+
+[root@ip-172-31-93-47 ~]# mkdir /cloud
+[root@ip-172-31-93-47 ~]# mv * /cloud
+[root@ip-172-31-93-47 ~]# cd /cloud
+[root@ip-172-31-93-47 cloud]# ls
+
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  .                                -----> This will not work
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  -f  /cloud/Dockerfile .          -----> This will work
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  -<  /cloud/Dockerfile           -----> This will work
+
+
+
+Using custom Docker file name
+===============================
+
+
+[root@ip-172-31-93-47 ~]# vim cloudknowledges 
+
+FROM  centos
+RUN touch abc
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:2  .            -----> This will not work as it is not default named
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:2  -f  cloudknowledges .          -----> This will work
+
+
+[root@ip-172-31-93-47 ~]# ls
+cloudknowledges
+
+[root@ip-172-31-93-47 ~]# mv cloudkowledges  /cloud
+[root@ip-172-31-93-47 ~]# cd cloud
+[root@ip-172-31-93-47 cloud]# ls
+Dockerfile cloudknowledges
+
+[root@ip-172-31-93-47 cloud]# cd
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:3  -f /cloud/cloudknowledges .
+
+
+
+
+[root@ip-172-31-93-47 ~]# cd cloud
+[root@ip-172-31-93-47 cloud]# ls
+Dockerfile cloudknowledges
+
+
+[root@ip-172-31-93-47 cloud]# tar -czvf dockerfile.tar.gz Dockerfile
+[root@ip-172-31-93-47 cloud]# tar -czvf cloudknowledges.tar.gz cloudknowledges
+[root@ip-172-31-93-47 cloud]# ls
+Dockerfile  dockerfile.tar.gz  cloudknowledges cloudknowledges.tar.gz 
+[root@ip-172-31-93-47 cloud]# rm -rf   Dockerfile cloudknowledges
+[root@ip-172-31-93-47 cloud]# ls
+dockerfile.tar.gz   cloudknowledges.tar.gz
+[root@ip-172-31-93-47 cloud]# cd
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:4  -< /cloud/cloudknowledges.tar.gz    ----> This will not work asit will find default named Dockerfile
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:4 -f cludknowledges -< /cloud/cloudknowledges.tar.gz  --> This works
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:5  -< /cloud/dockerfile.tar.gz    ----> This will work as it is default named
+
+
+
+
+Build docker image without making dockerfile
+===================================================
+
+[root@ip-172-31-93-47 ~]# docker image build  -t devimage:5 -<<EOF
+>FROM ubuntu:14.04
+>RUN apt-get update && apt-get install -y apache2
+>EOF
+
+
+Build docker image with shared link dockerfile
+===================================================
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:6 -f cloudknowledge https://www.cloudknowledges.com/cloud/cloudknowledges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

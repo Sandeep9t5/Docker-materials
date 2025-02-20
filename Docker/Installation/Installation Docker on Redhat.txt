@@ -1,0 +1,145 @@
+Docker Installation -  ( Redhat / Centos )
+=============================================================================================================================
+
+To install Docker on Red Hat Enterprise Linux (RHEL), follow these steps:
+
+Step 1: Uninstall Old Versions (if any)
+-------------------------------------------
+If you have any old versions of Docker installed, remove them:
+
+sudo yum remove docker \
+                docker-client \
+                docker-client-latest \
+                docker-common \
+                docker-latest \
+                docker-latest-logrotate \
+                docker-logrotate \
+                docker-engine
+
+Step 2: Set Up the Docker Repository
+---------------------------------------
+To set up the Docker repository, you'll need to install the yum-utils package and add the Docker repository.
+
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+
+rpmquery podman buildah
+dnf remove podman buildah
+
+Step 3: Install Docker Engine
+------------------------------------
+Install Docker Engine, Docker CLI, and Containerd:
+
+dnf install docker-ce docker-ce-cli containerd.io
+                (or)
+yum install docker-ce docker-ce-cli containerd.io
+
+Step 4: Start and Enable Docker
+--------------------------------------
+Start the Docker service and enable it to start on boot:
+
+sudo systemctl start docker
+sudo systemctl enable docker
+systemctl status docker
+docker version
+which docker
+
+Step 5: Verify Docker Installation
+--------------------------------------
+To verify that Docker is installed correctly, run the following command:
+This command downloads a test image and runs it in a container. When the container runs, it prints a confirmation message.
+
+sudo docker run hello-world
+
+
+
+Step 6: Configure the Firewall
+--------------------------------------
+If you are running a firewall, you need to allow Docker to communicate over the network. The following commands open the necessary ports:
+
+sudo firewall-cmd --zone=public --add-masquerade --permanent
+sudo firewall-cmd --zone=public --add-port=2376/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=2377/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=7946/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=7946/udp --permanent
+sudo firewall-cmd --zone=public --add-port=4789/udp --permanent
+sudo firewall-cmd --reload
+
+
+
+**************************************************************************************************************************
+
+
+To uninstall Docker from a Red Hat Enterprise Linux (RHEL) system, follow these steps:
+
+Step 1: Stop Docker Service
+---------------------------------
+First, stop the Docker service to ensure that no containers are running during the uninstallation process:
+
+sudo systemctl stop docker
+
+
+Step 2: Uninstall Docker Packages
+-------------------------------------
+Remove Docker packages from your system using the yum package manager:
+
+sudo yum remove docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+
+Step 3: Remove Docker Dependencies
+------------------------------------------
+Remove any dependencies that were installed with Docker:
+
+sudo yum remove docker \
+                docker-client \
+                docker-client-latest \
+                docker-common \
+                docker-latest \
+                docker-latest-logrotate \
+                docker-logrotate \
+                docker-engine
+
+Step 4: Remove Docker Data
+-----------------------------------
+Docker stores images, containers, volumes, and configuration files in /var/lib/docker/. To completely uninstall Docker, you should remove this directory:
+
+sudo rm -rf /var/lib/docker
+
+
+If you also used Docker Compose, you might want to remove its data directory:
+sudo rm -rf ~/.docker
+
+
+Step 5: Remove Docker Group (Optional)
+----------------------------------------------
+If you created a Docker group, you might want to remove it:
+
+sudo groupdel docker
+
+
+Step 6: Verify Removal
+--------------------------------
+To ensure Docker has been completely removed, check that the Docker packages and directories are no longer present:
+
+docker --version
+
+This command should return an error indicating that Docker is not installed. You can also check for remaining Docker files:
+ls /var/lib/docker
+
+The directory should not exist if Docker has been completely removed.
+
+
+**************************************************************************************************************************
+
+
+Remove
+
+1.Uninstall the Docker Engine, CLI, containerd, and Docker Compose packages:
+
+sudo yum remove docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+2. Images, containers, volumes, or custom configuration files on your host aren't automatically removed. To delete all images, containers, and volumes:
+
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd

@@ -1,0 +1,486 @@
+
+To Create docker container
+=============================
+
+To create a container and container will be in closed mode ( will make and close the container )
+
+# docker container run ubuntu
+
+To create a container and container will be in closed mode ( occupy container terminal)
+
+# docker container run ubuntu sleep 60
+
+
+To create a container and container will be in closed mode ( not occupy container terminal and terminal will be free for other tasks  -- detached mode)
+
+# docker container run -d ubuntu
+
+
+To create a container and container will be in running background in detached  mode 
+
+# docker container run -itd ubuntu
+
+To create a container and go inside the container  
+
+# docker container run -it ubuntu /bin/bash
+
+To create a named container 
+
+# docker container run -itd --name webserver ubuntu 
+
+
+**************************************************************
+Docker Basic commands
+********************************************
+
+
+To see all images present in your local repo
+================================================
+
+# docker images
+
+To find out images in docker hub
+=====================================
+ 
+# docker search  image_name
+# docker search  ubuntu
+
+To download image from docker hub to local machine
+=====================================================
+ 
+# docker   pull  image_name
+# docker   pull  ubuntu
+
+
+To see the containers
+========================
+
+# docker ps                 (running containers)
+# docker  ps –a             (stopped and exit containers)
+ps (process status) 
+
+       OR 
+                   
+# docker container ls       (show only running containers)
+# docker container ls -a    (show only stopped and exit containers)
+
+
+
+To Start docker container 
+=================================
+
+
+# docker  start  container_name
+# docker container start  container_name
+
+
+
+To go inside container
+============================
+
+# docker   attach  container_name
+# docker container  attach  container_name
+
+
+To go out of the running container without closing it
+==============================================================
+
+cntrl + p
+cntrl + q
+
+
+To Renaming  docker container 
+=================================
+
+# docker container rename  container_name   new_containername
+
+
+
+To Stop docker container 
+================================
+
+
+# docker  stop  container_name
+# docker container  stop  container_name
+
+
+
+To Delete  docker container 
+================================
+
+
+# docker  rm  container_name
+# docker container rm  container_name
+
+
+To delete a container forcefully
+
+# docker container rm -f container_name
+
+
+To copy a file 
+===========================
+
+# docker container cp filename  container_name:/tmp/
+
+
+Member-1  will create an image of the existing container and share with others
+=============================================================================================
+
+# docker container export   container_name > web.tar
+
+or
+
+# docker container export   container_name -o web.tar
+
+Member-2
+===============================================================
+
+# docker image import  web.tar  webimage
+
+# docker container run -it webimage /bin/bash
+
+
+To create an image of running container
+==================================================
+
+# docker container commit  container_name     new container_name
+# docker image ls
+# docker container run -it mywebimage /bin/bash
+
+
+Images Related
+==================================
+
+To push an existing image in docker hub
+
+# docker tag mysql  sd171991/sqlserver
+# docker image ls
+
+# docker login
+# docker image push  sd171991/sqlserver hub.docker.com
+
+
+
+
+
+ 
+Port mapping
+=================================================================================================
+
+Docker Port Expose:
+
+
+# docker run  -td  --name  techserver  -p  80:80ubuntu 
+# docker ps
+# docker  port  techserver/p-80/tcp–0.0.0.0/80 
+
+# docker exec -it techserver /bin/bash
+# apt-get install apache2  -y 
+# cd /var/www/html
+# echo “write some msg”  >   index.html 
+# service apache2 start
+
+
+#docker  run  -td  --name   myjenkins  -p   8080:8080 jenkins
+
+
+
+# docker container run -it -p 3600:80 ubuntu /bin/bash
+# docker container run -td -p 3600:80 ubuntu 
+# docker container run -it --name webserver -p 3600:80 ubuntu 
+
+
+
+
+Difference  between docker  attach and  docker  exec:
+
+ Docker ‘exec’ creates a new process in the container’s environment while docker ‘attach’ just connect the standard input/output of the main process inside the container to corresponding standard input/output error of current terminal.
+
+ Docker ‘exec’is specifically for running newthings in an already started container be it a shell or some other process.
+
+
+What is the difference between docker expose and publish:
+
+Basically you have three options:
+
+1. Neither specify expose  nor-p
+2. Only  specify  expose
+3. Specify  expose  and  -p
+
+
+1. If  you specify neither expose nor -p, the service in the container will only be accessible from inside the container itself.
+2. If you expose a port, the service in the container is not accessible from outside docker but from inside other docker containers so this is good for inter-container communication.
+3. If you expose and -p a port, the service in the container is accessible from anywhere even outside docker.
+ 
+If you do   –p  but do not expose docker does an implicit expose.This is because if a port is open to the public, it is automatically also open to the other docker containers. Hence-p includes expose.
+
+
+
+
+
+****************************************************************
+Docker Monitoring Commands 
+****************************************
+
+To Check Docker containers RAM / CPU utilizations
+=======================================================
+
+To check all the containers ram utilization
+
+# docker container stats  
+
+To check specific container ram utilization
+
+# docker container stats  container_id
+
+
+
+
+****************************************************************************
+Docker File
+**************************************************************
+
+Docker file:
+
+Docker file is basically a text file. It contains some set of instructions.
+Automation of docker image creation.
+
+Docker file components:
+
+FROM: for base image, this command must be on the top of the dockerfile.
+ 
+RUN: to execute commands, it will create a layer in image 
+
+MAINTAINER: author/ owner/ description
+
+COPY: copy files from local system (dockervm) we need to provide source, destination (wecan’t download file from internet and any remote repo.)
+
+ADD: similar to copy but it provides a feature to download files from internet, also extract file at docker image side.
+
+EXPOSE: to expose ports such as port 8080 for tomcat, port 80 for nginx etc. 
+
+WORKDIR: to set working directory for a container. 
+
+CMD: execute commands but during container creation.
+
+ENTRYPOINT: similar to CMD but has higher priority over CMD, first commands will be executed by ENTRYPOINT only.  Higher priority then CMD
+
+ENV: environment variables
+
+
+Docker file
+=========================================================
+
+	Create a file named Docker file & Add instructions in Docker file	
+	Build docker file to create image
+	Run image to create container 
+
+
+
+File -1
+==================================================================================
+
+Step:- 1 
+
+# vi Dockerfile
+
+FROM ubuntu
+RUN  echo  “Subscribe” > /tmp/testfile 
+Esc  -> :wq!
+
+
+Step:- 2  To create image come out of Dockerfile
+
+#docker  build  -t   your-new-image-name  .
+
+#docker ps -a
+ 
+#docker image
+ 
+
+       
+Step:- 3 Now create container from the above image 
+
+#docker  run   -it   --name   container-name    your-new image name /bin/bash
+#cat /tmp/testfile
+
+
+
+
+File -2
+====================================================================
+
+#vi Dockerfile 
+
+FROM  ubuntu 
+WORKDIR /tmp
+ RUN  echo  “thankyou”  >  /tmp/testfile 
+ ENV myname Sandeep
+    COPY  testfile1  /tmp 
+  ADD  test.tar.gz  /tmp
+
+To create image come out of Dockerfile
+#docker  build  -t   your-new-image-name  .
+
+#docker ps -a
+ 
+#docker image
+ 
+
+       
+Now create container from the above image 
+#docker  run   -it   --name   container-name    your-new image name /bin/bash
+
+
+
+****************************************************************************************************************************
+
+
+Docker File to access container (By SSH) 
+============================================================== 
+
+# docker image history image id
+
+Lecture :12
+================================================================
+
+
+FROM  ubuntu:14.04
+LABEL Name="Sanjay Dahiya"
+LABEL EmailID="Sanjay.dahiya332@gmail.com"
+LABEL Mobile="8817442344"
+ENV Name=cloudknowledges
+ENV Pass=docker@2020
+RUN useradd $Name  &&  echo "$Name:$Pass" | chpasswd
+RUN touch India
+RUN touch abc
+RUN touch abc1
+RUN apt-get update && apt-get install -y tree  /
+    python \
+    openssh-server  \
+    openssh-client
+RUN mkdir -p /var/run/sshd
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+
+# docker image build -t cloudknowledge:51 .
+# docker container run -td -p 2222:22 cloudknoledge:51
+
+
+
+
+
+lecture: 13
+===========================================================
+
+
+FROM centos:latest
+MAINTAINER sanjay.dahiya332@gmail.com
+RUN yum install -y httpd \
+   zip  \
+  unzip
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page251/folio.zip  /var/www/html/ 
+WORKDIR /var/www/html
+RUN unzip folio.zip
+RUN cp -rvf Folio/*  .
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+EXPOSE 80
+
+
+# docker image build -t cloudknowledge:70 .
+# docker container run -i td -p 8000:80 cloudknowledge:70
+
+
+
+
+
+
+lecture: 14
+==========================================================================
+
+[root@ip-172-31-93-47 ~]# vim Dockerfile
+
+FROM  ubuntu:14.04
+touch abc
+
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  .
+
+
+
+[root@ip-172-31-93-47 ~]# mkdir /cloud
+[root@ip-172-31-93-47 ~]# mv * /cloud
+[root@ip-172-31-93-47 ~]# cd /cloud
+[root@ip-172-31-93-47 cloud]# ls
+
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  .                                -----> This will not work
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  -f  /cloud/Dockerfile .          -----> This will work
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:1  -<  /cloud/Dockerfile           -----> This will work
+
+
+
+Using custom Docker file name
+==========================================================
+
+
+[root@ip-172-31-93-47 ~]# vim cloudknowledges 
+
+FROM  centos
+RUN touch abc
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:2  .            -----> This will not work as it is not default named
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:2  -f  cloudknowledges .          -----> This will work
+
+
+[root@ip-172-31-93-47 ~]# ls
+cloudknowledges
+
+[root@ip-172-31-93-47 ~]# mv cloudkowledges  /cloud
+[root@ip-172-31-93-47 ~]# cd cloud
+[root@ip-172-31-93-47 cloud]# ls
+Dockerfile cloudknowledges
+
+[root@ip-172-31-93-47 cloud]# cd
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:3  -f /cloud/cloudknowledges .
+
+
+
+
+[root@ip-172-31-93-47 ~]# cd cloud
+[root@ip-172-31-93-47 cloud]# ls
+Dockerfile cloudknowledges
+
+
+[root@ip-172-31-93-47 cloud]# tar -czvf dockerfile.tar.gz Dockerfile
+[root@ip-172-31-93-47 cloud]# tar -czvf cloudknowledges.tar.gz cloudknowledges
+[root@ip-172-31-93-47 cloud]# ls
+Dockerfile  dockerfile.tar.gz  cloudknowledges cloudknowledges.tar.gz 
+[root@ip-172-31-93-47 cloud]# rm -rf   Dockerfile cloudknowledges
+[root@ip-172-31-93-47 cloud]# ls
+dockerfile.tar.gz   cloudknowledges.tar.gz
+[root@ip-172-31-93-47 cloud]# cd
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:4  -< /cloud/cloudknowledges.tar.gz    ----> This will not work asit will find default named Dockerfile
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:4 -f cludknowledges -< /cloud/cloudknowledges.tar.gz  --> This works
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:5  -< /cloud/dockerfile.tar.gz    ----> This will work as it is default named
+
+
+
+
+Build docker image without making dockerfile
+================================================================================
+
+[root@ip-172-31-93-47 ~]# docker image build  -t devimage:5 -<<EOF
+>FROM ubuntu:14.04
+>RUN apt-get update && apt-get install -y apache2
+>EOF
+
+
+Build docker image with shared link dockerfile
+======================================================================
+
+[root@ip-172-31-93-47 ~]# docker image build -t devimage:6 -f cloudknowledge https://www.cloudknowledges.com/cloud/cloudknowledges
+
+

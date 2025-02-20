@@ -1,0 +1,29 @@
+
+To Create docker container
+=============================
+
+To create a container and container will be in closed mode ( will make and close the container )
+
+# docker container run ubuntu
+
+To create a container and container will be in closed mode ( occupy container terminal)
+
+# docker container run ubuntu sleep 60
+
+
+To create a container and container will be in closed mode ( not occupy container terminal and terminal will be free for other tasks  -- detached mode)
+
+# docker container run -d ubuntu
+
+
+To create a container and container will be in running background in detached  mode 
+
+# docker container run -itd ubuntu
+
+To create a container and go inside the container  
+
+# docker container run -it ubuntu /bin/bash
+
+To create a named container 
+
+# docker container run -itd --name webserver ubuntu 

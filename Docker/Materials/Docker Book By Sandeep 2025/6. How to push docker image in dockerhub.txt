@@ -1,0 +1,50 @@
+How to push docker image in dockerhub
+============================================================================
+
+# docker run –it ubuntu /bin/bash
+
+Now create some files inside container, now create image of this container 
+
+# docker commit  container_name     your_image_name
+
+
+
+Now create account / login into hub.docker.com
+==================================================================
+ 
+#docker login
+
+Enter your username and password 
+
+
+
+Now give tag to your image
+==========================================================
+
+
+# docker   tag   image1  yourdocker id/ newimage
+ 
+# docker push dockerid/newimage
+
+
+
+Now you can see this image in docker hub account
+====================================================================
+
+Now create one instance in an other region and pull image from hub 
+
+# docker pull docker id/newimage
+# docker run  -it   --name  mycondockerid/newimage/bin/bash
+
+
+
+*********************************************************************************************************************
+BY - Sanjay Dahiya
+
+To push an existing image in docker hub
+
+# docker tag mysql  sd171991/sqlserver
+# docker image ls
+
+# docker login
+# docker image push  sd171991/sqlserver hub.docker.com

@@ -1,0 +1,89 @@
+To see all the running containers
+
+# docker container ls
+
+To see all the stopped / exit mode containers
+
+# docker container ls -a
+
+To create a container and container will be in closed mode ( occupy container terminal)
+
+# docker container run ubuntu
+
+
+To create a container and container will be in closed mode ( not occupy container terminal and terminal will be free for other tasks  -- detach mode)
+
+# docker container run -d ubuntu
+
+
+To create a container and container will be in running background in detached  mode 
+
+# docker container run -itd ubuntu
+
+To create a container and go inside the container  
+
+# docker container run -it ubuntu /bin/bash
+
+To stop container
+
+# docker container  stop  container_name
+
+To start container
+
+# docker container start  container_name
+
+
+To go inside container
+
+# docker container  attach  container_name
+
+To delete a container
+
+# docker container rm  container_name
+
+
+To delete a container forcefully
+
+# docker container rm -f container_name
+
+
+To check the container ip
+
+# docker container inspect  container_id
+
+To check all the containers ram utilization
+
+# docker container stats  
+
+To check specific container ram utilization
+
+# docker container stats  container_id
+
+Port mapping
+
+# docker container run  -it -p 3600:80 ubuntu /bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

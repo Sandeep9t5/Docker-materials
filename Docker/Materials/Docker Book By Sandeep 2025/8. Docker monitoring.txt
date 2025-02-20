@@ -1,0 +1,14 @@
+****************************************************************
+Docker Monitoring Commands 
+****************************************
+
+To Check Docker containers RAM / CPU utilizations
+=======================================================
+
+To check all the containers ram utilization
+
+# docker container stats  
+
+To check specific container ram utilization
+
+# docker container stats  container_id

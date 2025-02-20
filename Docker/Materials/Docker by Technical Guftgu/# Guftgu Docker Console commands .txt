@@ -1,0 +1,296 @@
+# Docker Installation
+
+yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+docker version
+which docker
+sudo docker run hello-world
+
+=============================================================================================================================
+
+Basic Docker Commands:
+-----------------------------
+
+1.To see all images present in your local repo:
+
+# docker images
+
+2.To find out images in docker hub
+
+# docker search image_name
+
+3.To download image from dockerhub to local machine
+
+# docker pull image_name
+
+4.To give a name to container ( create + start )
+
+# docker run -it --name new_name image_name /bin/bash                    ( i - interactive mode     t - terminal  )
+
+Command : docker run -it ubuntu /bin/bash
+          docker run -it --name sansri ubuntu /bin/bash
+
+container info :
+------------------
+
+cat /etc/os-release
+
+
+Out from container:
+--------------------
+
+exit
+
+5.To check service start or not (status)
+
+# docker service status
+
+6.To start: # docker service start
+
+7.To stop: # docker service stop
+
+8.To start container
+
+# docker start container_name
+
+9.To go inside container
+
+# docker attach container_name
+
+10.To see running containers
+
+# docker ps
+
+11.To see all containers
+
+# docker ps -a                                                            ( p-process   s- status    a-all )
+
+12.To stop container
+
+# docker stop container_name
+
+13.To delete a container
+
+# docker rm container_name
+
+
+=============================================================================================================================
+
+
+Create container from our own Image:
+
+1.  Docker Hub      -->    Image     --->  New_Container
+2.  Container       -->    Image     --->  New_Container
+
+Now we have to create container from our own image. Therefore, create one container first: 
+
+#docker run -it --name container_name image_name /bin/bash
+
+docker run  -it --name bhupicontainer  ubuntu /bin/bash
+
+#cd tmp/
+
+Now create one file inside this tmp directory
+
+# touch myfile
+# ls
+
+Now if you want to see the difference between the basic image and the changes on it
+
+# docker diff container_name image_name
+
+  docker diff bhupicontainer
+
+Now create image of this container
+
+# docker commit newcontainer_name  image_name
+
+  docker commit bhupicontainer new_image_banaya
+
+
+# docker images
+
+Now create container from this image
+
+# docker run -it --name newcontanier_name   image_name    /bin/bash
+
+ docker run -it --name rajputcontainer  new_image_banaya  /bin/bash
+
+
+# ls
+# cd tmp
+# ls (you will get all of your files)
+
+
+
+3.  Docker File     -->    Image     --->  New_Container
+
+Dockerfile
+
+➢ Create a file named Dockerfile
+➢ Add instructions in Dockerfile
+➢ Build dockerfile to create image
+➢ Run image to create container
+
+
+# vi Dockerfile
+
+FROM ubuntu
+RUN echo “Subscribe technical guftgu” > /tmp/testfile
+
+To create image out of Dockerfile
+
+# docker build -t test .
+#docker ps -a
+# docker image
+
+
+Now create container from the above image
+-------------------------------------------------------
+
+
+#docker run -it --name testcontainer test /bin/bash
+#cat /tmp/testfile
+
+
+
+# vi Dockerfile
+
+FROM ubuntu
+WORKDIR /tmp
+RUN echo “thank you” > /tmp/testfile
+ENV myname naga
+COPY testfile1 /tmp
+ADD test.tar.gz /tmp
+
+=============================================================================================================================
+
+Docker Volume by Docker File 
+----------------------------------
+
+Creating Volume from Dockerfile:
+
+Create a Dockerfile and write
+
+vi Dockerfile
+FROM ubuntu
+VOLUME “myvolume”
+
+
+Then create image from this Dockerfile
+
+#docker build -t myimage
+
+Now create a container from this image and run
+
+# docker run -it --name container1 myimage /bin/bash
+
+Now do ls, you can see myvolume.
+
+Now share volume with another container
+
+
+1.Container to container
+---------------------------
+
+# docker run -it --name container2 (new) --privileged=true –volumesfrom container1 ubuntu /bin/bash
+
+Now after creating container2, myvolume is visible. Whatever you do in one volume, can see from other volume.
+
+#touch /myvolume/samplefile
+
+#docker start container1
+
+# docker attach container1
+
+#ls/myvolume
+
+You can see sample file here then exit.
+
+
+
+Docker Volume by COMMAND 
+
+Now create volume by using command:
+-----------------------------------------
+
+#docker run -it --name container3 -v /volume2 ubuntu /bin/bash
+# ls
+#cd /volume2
+
+Now create one file cont3file and exit
+
+Now create one more container and share volume2
+
+#docker run -it --name container4 --privileged=true --volumefrom container3 ubuntu /bin/bash
+
+Now you re inside container do ls you can see volume2
+
+Now create one file inside this volume and then check in container3 you can see that file.
+
+
+
+2.Volumes (Host to Container)
+------------------------------
+
+Verify files in /home/ec2-user
+#docker run -it --name hostcontainer -v /home/ec2-user:/container --privileged=true ubuntu /bin/bash
+#cd /container
+Do ls, now you can see all files of host machine.
+#touch contanerfile (in container) and exit
+Now check in EC2 machine you can see this above file.
+
+
+Some other commands:
+--------------------
+#docker volume ls
+#docker volume create <volumename>
+#docker volume rm <volumename>
+#docker volume prune (it removes all unused docker volume)
+#docker volume inspect <volumename>
+#docker container inspect <containername>
+
+Docker Port Expose:
+
+docker run -td --name techserver -p 80:80 ubuntu
+# docker ps
+# docker port techserver o/p- 80/tcp – 0.0.0.0/80
+# docker exec -it techserver /bin/bash
+# apt-get update
+# apt-get install apache2 -y
+# cd /var/www/html
+# echo “write some msg” > index.html
+#service apache2 start
+# docker run -td --name myjenkins -p 8080:8080 jenkins
+
+
+How to push docker image in docker hub:
+
+docker run -it ubuntu /bin/bash
+Now create some files inside container, now create image of this container
+#docker commit container1 image1
+Now create account in hub.docker.com
+Now go to EC2 instance
+#docker login
+Enter your username and password
+Now give tag to your image
+#docker tag image1 dockerid/newimage
+#docker push dockerid/newimage
+Now you can see this image in docker hub account
+Now create one instance in another region and pill image from hub
+#docker pull dockerid/newimage
+#docker run -it --name mycon dockerid/newimage /bin/bash
+
+
+
+
+Some important commands:
+--------------------------
+
+Stop all running containers: # docker stop $(docker ps -a -q)
+Delete all stopped containers: # docker rm $(docker ps -a -q)
+Delete all images: docker rmi -f $(docker images -q)
